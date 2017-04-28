@@ -43,12 +43,41 @@ package al.ikubinfo.doit.business.reminders.boundary;
  				.add("caption", "implement")
  				.add("priority", 42)
  				.build();
+ 		
+ 		//create
  		Response postResponse = this.provider.target().request()
  				.post(Entity.json(todoToCreate));
  		assertThat(postResponse.getStatus(), is(201));
  		String location = postResponse.getHeaderString("Location");
  		System.out.println("location = " + location);
  		
+ 		//find
+		 JsonObject dedicatedToDo = this.provider.client()
+				 			.target(location)
+				 			.request(MediaType.APPLICATION_JSON)
+				 			.get(JsonObject.class);
+		 assertTrue(dedicatedToDo.getString("caption").contains("impl"));
+		 
+		//update
+ 		 JsonObjectBuilder updateBuilder = Json.createObjectBuilder();
+ 		 JsonObject updated = updateBuilder
+ 				 			.add("caption", "implement")
+ 				 			.add("priority", 32)
+ 				 			.build();
+ 		 
+ 		this.provider.client()
+		 	.target(location)
+		 	.request(MediaType.APPLICATION_JSON)
+		 	.put(Entity.json(updated));
+		 
+ 		//find it again
+ 		JsonObject updatedToDo = this.provider.client()
+	 			.target(location)
+	 			.request(MediaType.APPLICATION_JSON)
+	 			.get(JsonObject.class);
+assertTrue(updatedToDo.getString("caption").contains("impl"));
+		 
+ 		//findAll
  		Response response = this.provider.target()
  				.request(MediaType.APPLICATION_JSON)
  				.get();
@@ -60,12 +89,24 @@ package al.ikubinfo.doit.business.reminders.boundary;
  		 JsonObject todo = allTodos.getJsonObject(0);
  		 assertTrue(todo.getString("caption").startsWith("impl"));
  		 
- 		 //GET with id
- 		 JsonObject dedicatedToDo = this.provider.target()
- 				 			.path("42")
- 				 			.request(MediaType.APPLICATION_JSON)
- 				 			.get(JsonObject.class);
- 		 assertTrue(dedicatedToDo.getString("caption").contains("42"));
+ 		//update status
+ 		 JsonObjectBuilder statusBuilder = Json.createObjectBuilder();
+ 		 JsonObject status = statusBuilder
+ 				 			.add("done", true)
+ 				 			.build();
+ 		 
+ 		 this.provider.client()
+ 		 	.target(location)
+ 		 	.path("status")
+ 		 	.request(MediaType.APPLICATION_JSON)
+ 		 	.put(Entity.json(status));
+ 		 
+ 		 //verify status
+ 		updatedToDo = this.provider.client()
+		 			.target(location)
+		 			.request(MediaType.APPLICATION_JSON)
+		 			.get(JsonObject.class);
+		assertThat(updatedToDo.getBoolean("done"), is(true)); 		 
  		 
  		 //DELETE
  		 Response deleteResponse = this.provider.target()
@@ -74,6 +115,6 @@ package al.ikubinfo.doit.business.reminders.boundary;
  				 			.delete();
  		 assertThat(deleteResponse.getStatus(), is(204));
  		 
- 	}
- 
- }
+	}
+
+}

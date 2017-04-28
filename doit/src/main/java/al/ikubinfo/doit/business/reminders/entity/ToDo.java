@@ -25,6 +25,8 @@ public class ToDo {
 	private String description;
 	private int priority;
 	
+	private boolean done;
+	
 	public ToDo(String caption, String description, int priority) {
 		super();
 		this.caption = caption;
@@ -66,6 +68,14 @@ public class ToDo {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	public boolean isDone() {
+		return done;
+	}
+
+	public void setDone(boolean done) {
+		this.done = done;
 	}
 
 }
