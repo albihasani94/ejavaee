@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.json.JsonObject;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -34,44 +32,9 @@ public class ToDosResource {
 		return "hey " + System.currentTimeMillis();
 	}
 
-	@GET
 	@Path("{id}")
-	public ToDo find(@PathParam("id") long id) {
-		return manager.findById(id);
-		// return new ToDo("implement rest endpoint " + id, "description", 100);
-	}
-
-	@DELETE
-	@Path("{id}")
-	public void delete(@PathParam("id") long id) {
-		manager.delete(id);
-		//System.out.println("deleted = " + id);
-	}
-	
-	@PUT
-	@Path("{id}")
-	public ToDo update(@PathParam("id") long id, ToDo todo) {
-		todo.setId(id);
-		return manager.save(todo);
-	}
-	
-	@PUT
-	@Path("{id}/status")
-	public Response statusUpdate(@PathParam("id") long id, JsonObject statusUpdate) {
-		if(!statusUpdate.containsKey("done")) {
-			return Response.status(Response.Status.BAD_REQUEST).
-					header("reason", "JSON should contain field done").
-					build();
-		}
-		boolean done = statusUpdate.getBoolean("done");
-		ToDo todo = manager.updateStatus(id, done);
-		if(todo == null) {
-			return Response.status(Response.Status.BAD_REQUEST).
-					header("reason", "todo with id " + id + " does not exist").
-					build();
-		} else {
-			return Response.ok(todo).build();
-		}
+	public ToDoResource find(@PathParam("id") long id) {
+		return new ToDoResource(id, manager);
 	}
 
 	@GET
