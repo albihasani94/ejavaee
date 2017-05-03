@@ -106,7 +106,36 @@ assertTrue(updatedToDo.getString("caption").contains("impl"));
 		 			.target(location)
 		 			.request(MediaType.APPLICATION_JSON)
 		 			.get(JsonObject.class);
-		assertThat(updatedToDo.getBoolean("done"), is(true)); 		 
+		assertThat(updatedToDo.getBoolean("done"), is(true));
+		
+		//update non-existing status
+		 JsonObjectBuilder nonExistingBuilder = Json.createObjectBuilder();
+		 status = nonExistingBuilder
+				 			.add("done", true)
+				 			.build();
+		 
+		 Response responseNonExisting = this.provider
+		 	.target()
+		 	.path("-42")
+		 	.path("status")
+		 	.request(MediaType.APPLICATION_JSON)
+		 	.put(Entity.json(status));
+		 assertThat(responseNonExisting.getStatus(), is(400));
+		 assertFalse(responseNonExisting.getHeaderString("reason").isEmpty());
+		 
+		//update malformed status
+		 nonExistingBuilder = Json.createObjectBuilder();
+		 status = nonExistingBuilder
+				 			.add("something wrong", true)
+				 			.build();
+		 
+		 responseNonExisting = this.provider.client()
+		 	.target(location)
+		 	.path("status")
+		 	.request(MediaType.APPLICATION_JSON)
+		 	.put(Entity.json(status));
+		 assertThat(responseNonExisting.getStatus(), is(400));
+		 assertFalse(responseNonExisting.getHeaderString("reason").isEmpty());
  		 
  		 //DELETE
  		 Response deleteResponse = this.provider.target()
