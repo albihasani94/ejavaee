@@ -162,5 +162,34 @@ assertTrue(updatedToDo.getString("caption").contains("impl"));
  		 assertThat(deleteResponse.getStatus(), is(204));
  		 
 	}
+ 	
+ 	@Test
+ 	public void createTodoWithoutCaption() {
+ 		JsonObjectBuilder todoBuilder = Json.createObjectBuilder();
+ 		JsonObject todoToCreate = todoBuilder.
+ 				add("priority", 42).
+ 				build();
+ 		
+ 		//create
+ 		Response postResponse = this.provider.target().request().
+ 				post(Entity.json(todoToCreate));
+ 		assertThat(postResponse.getStatus(), is(400));
+ 		postResponse.getHeaders().entrySet().forEach(System.out::println);
+ 	}
+ 	
+ 	@Test
+ 	public void createValidTodo() {
+ 		JsonObjectBuilder todoBuilder = Json.createObjectBuilder();
+ 		JsonObject todoToCreate = todoBuilder.
+ 				add("priority", 42).
+ 				add("caption", "test").
+ 				build();
+ 		
+ 		//create
+ 		Response postResponse = this.provider.target().request().
+ 				post(Entity.json(todoToCreate));
+ 		assertThat(postResponse.getStatus(), is(201));
+ 		postResponse.getHeaders().entrySet().forEach(System.out::println);
+ 	}
 
 }
