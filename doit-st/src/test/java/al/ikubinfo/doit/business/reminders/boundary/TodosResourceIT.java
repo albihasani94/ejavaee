@@ -62,13 +62,26 @@ package al.ikubinfo.doit.business.reminders.boundary;
  		 JsonObjectBuilder updateBuilder = Json.createObjectBuilder();
  		 JsonObject updated = updateBuilder
  				 			.add("caption", "implement")
- 				 			.add("priority", 32)
  				 			.build();
  		 
- 		this.provider.client()
+ 		Response updateResponse = this.provider.client()
 		 	.target(location)
 		 	.request(MediaType.APPLICATION_JSON)
 		 	.put(Entity.json(updated));
+ 		assertThat(updateResponse.getStatus(), is(200));
+ 		
+ 		//update again
+		 updateBuilder = Json.createObjectBuilder();
+		 updated = updateBuilder
+				 			.add("caption", "implement")
+				 			.add("priority", 42)
+				 			.build();
+		 
+		updateResponse = this.provider.client()
+		 	.target(location)
+		 	.request(MediaType.APPLICATION_JSON)
+		 	.put(Entity.json(updated));
+		assertThat(updateResponse.getStatus(), is(200 ));
 		 
  		//find it again
  		JsonObject updatedToDo = this.provider.client()
