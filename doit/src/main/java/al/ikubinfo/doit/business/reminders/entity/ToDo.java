@@ -11,11 +11,15 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import al.ikubinfo.doit.business.CrossCheck;
+import al.ikubinfo.doit.business.ValidEntity;
+
 @Entity
 @NamedQuery(name=ToDo.findAll, query="SELECT t FROM ToDo t")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ToDo {
+@CrossCheck
+public class ToDo implements ValidEntity {
 	
 	@Id
 	@GeneratedValue
@@ -84,6 +88,14 @@ public class ToDo {
 
 	public void setDone(boolean done) {
 		this.done = done;
+	}
+
+	@Override
+	public boolean isValid() {
+		if (this.priority <= 10) {
+			return true;
+		}
+		return (this.description != null);
 	}
 
 }

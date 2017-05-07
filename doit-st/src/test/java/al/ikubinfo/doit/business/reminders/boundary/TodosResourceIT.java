@@ -1,26 +1,24 @@
 package al.ikubinfo.doit.business.reminders.boundary;
  
  import static com.airhacks.rulz.jaxrsclient.JAXRSClientProvider.buildWithURI;
- import static org.hamcrest.CoreMatchers.is;
- import static org.junit.Assert.assertFalse;
- import static org.junit.Assert.assertThat;
- import static org.junit.Assert.assertTrue;
- import static org.junit.Assert.assertNotNull;
- 
- import java.math.BigDecimal;
- 
- import javax.json.Json;
- import javax.json.JsonArray;
- import javax.json.JsonObject;
- import javax.json.JsonObjectBuilder;
- import javax.ws.rs.client.Entity;
- import javax.ws.rs.core.MediaType;
- import javax.ws.rs.core.Response;
- 
- import org.junit.Rule;
- import org.junit.Test;
- 
- import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.junit.Rule;
+import org.junit.Test;
+
+import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
  
  public class TodosResourceIT {
  
@@ -42,7 +40,7 @@ package al.ikubinfo.doit.business.reminders.boundary;
  		JsonObjectBuilder todoBuilder = Json.createObjectBuilder();
  		JsonObject todoToCreate = todoBuilder
  				.add("caption", "implement")
- 				.add("priority", 42)
+ 				.add("priority", 10)
  				.build();
  		
  		//create
@@ -167,22 +165,8 @@ assertTrue(updatedToDo.getString("caption").contains("impl"));
  	public void createTodoWithoutCaption() {
  		JsonObjectBuilder todoBuilder = Json.createObjectBuilder();
  		JsonObject todoToCreate = todoBuilder.
- 				add("priority", 42).
- 				build();
- 		
- 		//create
- 		Response postResponse = this.provider.target().request().
- 				post(Entity.json(todoToCreate));
- 		assertThat(postResponse.getStatus(), is(400));
- 		postResponse.getHeaders().entrySet().forEach(System.out::println);
- 	}
- 	
- 	@Test
- 	public void createValidTodo() {
- 		JsonObjectBuilder todoBuilder = Json.createObjectBuilder();
- 		JsonObject todoToCreate = todoBuilder.
- 				add("priority", 42).
- 				add("caption", "test").
+ 				add("priority", 10).
+ 				add("caption", "implement").
  				build();
  		
  		//create
@@ -190,6 +174,36 @@ assertTrue(updatedToDo.getString("caption").contains("impl"));
  				post(Entity.json(todoToCreate));
  		assertThat(postResponse.getStatus(), is(201));
  		postResponse.getHeaders().entrySet().forEach(System.out::println);
+ 	}
+ 	
+ 	@Test
+ 	public void createValidTodo() {
+ 		JsonObjectBuilder todoBuilder = Json.createObjectBuilder();
+ 		JsonObject todoToCreate = todoBuilder.
+ 				add("priority", 9).
+ 				add("caption", "12").
+ 				build();
+ 		
+ 		//create
+ 		Response postResponse = this.provider.target().request().
+ 				post(Entity.json(todoToCreate));
+ 		assertThat(postResponse.getStatus(), is(201));
+ 	}
+ 	
+ 	@Test
+ 	public void createTodoWithHighPriorityWithoutDescription() {
+ 		JsonObjectBuilder todoBuilder = Json.createObjectBuilder();
+ 		JsonObject todoToCreate = todoBuilder.
+ 				add("caption", "10").
+ 				add("priority", 10).
+ 				build();
+ 		
+ 		//create
+ 		Response postResponse = this.provider.target().request().
+ 				post(Entity.json(todoToCreate));
+ 		postResponse.getHeaders().entrySet().forEach(System.out::println);
+ 		assertThat(postResponse.getStatus(), is(201));
+ 		
  	}
 
 }
