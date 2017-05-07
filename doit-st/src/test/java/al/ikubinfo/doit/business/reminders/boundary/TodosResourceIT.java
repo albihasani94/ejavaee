@@ -5,6 +5,7 @@ package al.ikubinfo.doit.business.reminders.boundary;
  import static org.junit.Assert.assertFalse;
  import static org.junit.Assert.assertThat;
  import static org.junit.Assert.assertTrue;
+ import static org.junit.Assert.assertNotNull;
  
  import java.math.BigDecimal;
  
@@ -81,7 +82,10 @@ package al.ikubinfo.doit.business.reminders.boundary;
 		 	.target(location)
 		 	.request(MediaType.APPLICATION_JSON)
 		 	.put(Entity.json(updated));
-		assertThat(updateResponse.getStatus(), is(200 ));
+		assertThat(updateResponse.getStatus(), is(409));
+		String conflictInformation = updateResponse.getHeaderString("cause");
+		assertNotNull(conflictInformation);
+		System.out.println("Conflict information: " + conflictInformation);
 		 
  		//find it again
  		JsonObject updatedToDo = this.provider.client()
