@@ -3,12 +3,15 @@ package al.ikubinfo.doit.business.reminders.boundary;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import al.ikubinfo.doit.business.logging.boundary.BoundaryLogger;
 import al.ikubinfo.doit.business.reminders.entity.ToDo;
 
 @Stateless
+@Interceptors(BoundaryLogger.class)
 public class ToDoManager {
 
 	@PersistenceContext
