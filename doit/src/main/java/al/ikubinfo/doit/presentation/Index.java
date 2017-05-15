@@ -1,5 +1,6 @@
 package al.ikubinfo.doit.presentation;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -35,6 +36,10 @@ public class Index {
 
 	public ToDo getTodo() {
 		return todo;
+	}
+	
+	public List<ToDo> getTodos() {
+		return this.boundary.findAll();
 	}
 	
 	public void showValidationError(String content) {
