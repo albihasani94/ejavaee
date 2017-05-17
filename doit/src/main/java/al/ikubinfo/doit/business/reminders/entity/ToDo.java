@@ -19,6 +19,7 @@ import al.ikubinfo.doit.business.ValidEntity;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @CrossCheck
+//@EntityListeners(TodoAuditor.class)
 public class ToDo implements ValidEntity {
 	
 	@Id

@@ -20,7 +20,7 @@ import al.ikubinfo.doit.business.reminders.entity.ToDo;
 
 @Stateless
 @Path("todos")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class ToDosResource {
 
 	@Inject
